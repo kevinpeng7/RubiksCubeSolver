@@ -534,4 +534,28 @@ public class Solver {
             Thread.sleep(ms);
         }catch(Exception e){}
     }
+
+    // Important for optimizing solution
+    public void cleanSolution(){
+        for (int i = allMoves.size()-1; i > 0; i--) {
+            if(i<allMoves.size()) {
+                if(i>0) {
+                    if (allMoves.get(i) - allMoves.get(i - 1) == Math.abs(6)) {
+                        allMoves.remove(i);
+                        allMoves.remove(i - 1);
+                        i++;
+                        continue;
+                    }
+                }
+                if(i>1){
+                    if(allMoves.get(i)==allMoves.get(i-1) && allMoves.get(i-1)==allMoves.get(i-2)){
+                        allMoves.set(i-2, (allMoves.get(i)+6)%12);
+                        allMoves.remove(i);
+                        allMoves.remove(i-1);
+                        i+=2;
+                    }
+                }
+            }
+        }
+    }
 }

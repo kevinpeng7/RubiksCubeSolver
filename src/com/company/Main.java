@@ -136,6 +136,8 @@ public class Main extends JFrame {
         s.convertToString();
         s.solveTopCorners();
         w.repaint();
+        s.convertToString();
+        s.cleanSolution();
         System.out.print("Final Solution: "); s.convertToString();
         s.userFriendlyOutput();
         s.recallState();
