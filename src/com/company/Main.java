@@ -7,12 +7,34 @@ import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.*;
 
-public class Main extends JFrame {
+public class Main extends JFrame implements MouseListener{
     final int height = 100;
     final int buffer = 50;
     final int sticker = 10;
 
+    public Main(){addMouseListener(this);}
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+    }
+    @Override
+    public void mouseEntered(MouseEvent e) {
+    }
+    @Override
+    public void mouseExited(MouseEvent e) {
+    }
+    @Override
+    public void mousePressed(MouseEvent e) {
+    }
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        System.out.println(x+ " " + y);
+    }
+
     public void paint(Graphics g) {
+        System.out.println("painting");
             Image img = createImage();
             g.drawImage(img,0,0,this);
         }
@@ -87,83 +109,88 @@ public class Main extends JFrame {
     }
 
     public static void main(String[] args) {
-        Scanner in = new Scanner(System.in);
-        Solver s = new Solver();
-        Main w = new Main();
-        //w.setUndecorated(true);
-        w.setTitle("Kevin's Rubik's Cube");
-        w.setSize(1500, 1000);
-        //w.setVisible(true);
-        w.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        System.out.println("For test case, type t. For randomly scrambled, type r. For user input, type i.");
-        char input = in.next().toLowerCase().toCharArray()[0];
-        switch(input){
-            case 'r':
-                s.solvedown();
-                s.scramble(500);
-                break;
-            case 'i':
-                s.solvedown();
-                w.setVisible(true);
-                //w.userInput();
-                String[] colours = new String[]{"white", "red", "green", "orange", "blue", "yellow"};
-                for (int i = 0; i < 6; i++) {
-                    System.out.println("Input values for the " + colours[i] + " face.");
-                    for (int j = 0; j < 9; j++) {
-                        Solver.faces[i][j] = (byte)in.nextInt();
-                        w.repaint();
-                    }
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                Scanner in = new Scanner(System.in);
+                Solver s = new Solver();
+                Main w = new Main();
+                //w.setUndecorated(true);
+                w.setTitle("Kevin's Rubik's Cube");
+                w.setSize(1500, 1000);
+                //w.setVisible(true);
+                w.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                System.out.println("For test case, type t. For randomly scrambled, type r. For user input, type i.");
+                char input = in.next().toLowerCase().toCharArray()[0];
+                switch(input){
+                    case 'r':
+                        s.solvedown();
+                        s.scramble(500);
+                        break;
+                    case 'i':
+                        s.solvedown();
+                        w.setVisible(true);
+                        //w.userInput();
+                        String[] colours = new String[]{"white", "red", "green", "orange", "blue", "yellow"};
+                        for (int i = 0; i < 6; i++) {
+                            System.out.println("Input values for the " + colours[i] + " face.");
+                            for (int j = 0; j < 9; j++) {
+                                Solver.faces[i][j] = (byte)in.nextInt();
+                                w.repaint();
+                            }
+                        }
+                        break;
+                    case 'v':
+                        w.setVisible(true);
                 }
-                break;
-            case 'v':
-                w.setVisible(true);
-        }
 
-        s.saveState();
-        w.repaint();
-        s.solveFirstEdge();
-        w.repaint();
-        while(s.checkMiddleEdges()<4){
-            boolean cont = true;
-            while (cont){
-                cont = s.checkMiddleEdgeTop4();
+                s.saveState();
+                w.repaint();
+                s.solveFirstEdge();
+                w.repaint();
+                while(s.checkMiddleEdges()<4){
+                    boolean cont = true;
+                    while (cont){
+                        cont = s.checkMiddleEdgeTop4();
+                    }
+                    s.solveExtraMiddleEdges();
+                }
+                w.repaint();
+                s.solveTopEdges();
+                w.repaint();
+                s.convertToString();
+                s.solveTopCorners();
+                w.repaint();
+                s.convertToString();
+                s.cleanSolution();
+                System.out.print("Final Solution: "); s.convertToString();
+                s.userFriendlyOutput();
+                s.recallState();
+                w.setVisible(true);
+                s.sleep(3000);
+                for (int i = 0; i < Solver.allMoves.size(); i++) {
+                    s.evaluateNumber(Solver.allMoves.get(i));
+                    w.repaint();
+                    s.sleep(500);
+                }
+                // allows the user to manually input turns
+                while(true){
+                    String str = in.next();
+                    if(str.equals("r"))s.right();
+                    else if(str.equals("R"))s.rightPrime();
+                    else if(str.equals("L")) s.leftPrime();
+                    else if(str.equals("l")) s.left();
+                    else if(str.equals("B")) s.backPrime();
+                    else if(str.equals("b"))s.back();
+                    else if(str.equals("f"))s.front();
+                    else if(str.equals("F"))s.frontPrime();
+                    else if(str.equals("d")) s.down();
+                    else if(str.equals("D"))s.downPrime();
+                    else if(str.equals("u"))s.up();
+                    else if(str.equals("U"))s.upPrime();
+                    w.repaint();
+                }
             }
-            s.solveExtraMiddleEdges();
-        }
-        w.repaint();
-        s.solveTopEdges();
-        w.repaint();
-        s.convertToString();
-        s.solveTopCorners();
-        w.repaint();
-        s.convertToString();
-        s.cleanSolution();
-        System.out.print("Final Solution: "); s.convertToString();
-        s.userFriendlyOutput();
-        s.recallState();
-        w.setVisible(true);
-        s.sleep(3000);
-        for (int i = 0; i < Solver.allMoves.size(); i++) {
-            s.evaluateNumber(Solver.allMoves.get(i));
-            w.repaint();
-            s.sleep(500);
-        }
-        // allows the user to manually input turns
-        while(true){
-            String str = in.next();
-            if(str.equals("r"))s.right();
-            else if(str.equals("R"))s.rightPrime();
-            else if(str.equals("L")) s.leftPrime();
-            else if(str.equals("l")) s.left();
-            else if(str.equals("B")) s.backPrime();
-            else if(str.equals("b"))s.back();
-            else if(str.equals("f"))s.front();
-            else if(str.equals("F"))s.frontPrime();
-            else if(str.equals("d")) s.down();
-            else if(str.equals("D"))s.downPrime();
-            else if(str.equals("u"))s.up();
-            else if(str.equals("U"))s.upPrime();
-            w.repaint();
-        }
+        });
+
     }
 }
