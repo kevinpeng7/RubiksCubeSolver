@@ -4,7 +4,9 @@ The objective of this project is to graphically represent a Rubik's cube and to 
 Checkout the full <a href ="https://docs.google.com/document/d/1RCjFrMTkLgQ4N8LGd8ne0DKDvW5jo3IokHSUNM5IFTI/edit?usp=sharing">design document</a> on Google Drive.
 
 Scramble:
+
 <img width="654" alt="screen shot 2017-05-21 at 3 12 21 pm" src="https://cloud.githubusercontent.com/assets/7998752/26286634/08476bb8-3e38-11e7-813b-cc0035f3f73e.png">
 
 Partially solved state:
+
 <img width="652" alt="screen shot 2017-05-21 at 3 12 31 pm" src="https://cloud.githubusercontent.com/assets/7998752/26286635/09893ca4-3e38-11e7-8e3b-6bb1b42ad4b0.png">
